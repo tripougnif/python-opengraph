@@ -14,7 +14,7 @@ setup(
     name='python-opengraph',
     version=__versionstr__,
     description='Python module to parse Open Graph metadata on web pages',
-    url='https://github.com/HenrikOssipoff/python-opengraph',
+    url='https://github.com/jaywink/python-opengraph',
     license='MIT',
     author='Henrik Ossipoff Hansen',
     author_email='henrik.ossipoff@gmail.com',
@@ -27,11 +27,9 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: Implementation :: PyPy'
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
     ],
     keywords='opengraph')
