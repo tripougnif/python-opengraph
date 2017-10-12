@@ -1,6 +1,6 @@
 [![](https://travis-ci.org/jaywink/python-opengraph.svg?branch=master)](https://travis-ci.org/jaywink/python-opengraph)
 
-# python-opengraph
+# opengraph
 
 Python module to parse Open Graph metadata on web pages. For more information on the Open Graph Protocol, see http://ogp.me/.
 
@@ -14,7 +14,9 @@ Other versions may work, but testing is only done against the above versions.
 
 ## Installation
 
-Currently only using GitHub VCS urls in your dependency file, for example. PyPi later.
+Note the correct name of the fork when installing.
+
+    pip install python-opengraph-jaywink
 
 ## Usage
 

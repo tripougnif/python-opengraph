@@ -15,7 +15,7 @@ else:
     raise RuntimeError("Unable to find version string.")
 
 setup(
-    name="python-opengraph",
+    name="python-opengraph-jaywink",
     version=__version__,
     description="Python module to parse Open Graph metadata on web pages",
     url="https://github.com/jaywink/python-opengraph",
