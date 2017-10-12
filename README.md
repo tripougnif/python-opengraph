@@ -22,16 +22,23 @@ Currently only using GitHub VCS urls in your dependency file, for example. PyPi 
 
     from opengraph import OpenGraph
 
-    og = OpenGraph(url='http://someurl.com')
-    og.title  # would yield the 'title' open graph element
+    og = OpenGraph(url="http://someurl.com")
+    og.title  # would yield the "title" open graph element
+    
+### Using different parser
+
+Any parser supported by BeautifulSoup can be passed in, assuming it is installed.
+
+    from opengraph import OpenGraph
+
+    og = OpenGraph(url="http://someurl.com", parser="lxml")
     
 ### Using HTML document
 
     from opengraph import OpenGraph
     
-    document = "<html><head><meta property="og:title" content="Test title"></head><body></body></html>"
+    document = '<html><head><meta property="og:title" content="Test title"></head><body></body></html>'
     og = OpenGraph(html=document)
-    og.title  # would yield the 'title' open graph element
 
 ## Development
 

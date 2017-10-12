@@ -8,11 +8,11 @@ class OpenGraph:
     useragent = None
     __data__ = {}
 
-    def __init__(self, url=None, html=None, useragent=None):
+    def __init__(self, url=None, html=None, useragent=None, parser="html.parser"):
         if useragent:
             self.useragent = useragent
         content = html or self._fetch(url)
-        self._parse(content)
+        self._parse(content, parser=parser)
 
     def __contains__(self, item):
         return item in self.__data__
@@ -38,8 +38,8 @@ class OpenGraph:
         response = requests.get(url, headers=headers)
         return response.text
 
-    def _parse(self, html):
-        doc = BeautifulSoup(html)
+    def _parse(self, html, parser):
+        doc = BeautifulSoup(html, parser)
         ogs = doc.html.head.findAll(property=re.compile(r'^og'))
 
         for og in ogs:
