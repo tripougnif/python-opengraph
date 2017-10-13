@@ -9,6 +9,23 @@ URL = "https://example.org"
 
 
 class TestOpenGraph:
+    def test__fetch(self, document):
+        with requests_mock.Mocker() as m:
+            m.get(URL, text=document)
+            og = OpenGraph(url=URL)
+        assert og.title == "Test title"
+
+    def test__fetch__only_http_protocols(self, document):
+        with requests_mock.Mocker() as m:
+            m.get("http://foo.bar", text=document)
+            assert OpenGraph(url="http://foo.bar") != {}
+            m.get("https://foo.bar", text=document)
+            assert OpenGraph(url="https://foo.bar") != {}
+            m.get("mailto:jay@foo.bar", text=document)
+            assert not OpenGraph(url="mailto:jay@foo.bar") == {}
+            m.get("ftp://foo.bar", text=document)
+            assert not OpenGraph(url="ftp://foo.bar") == {}
+
     def test_contains(self, document):
         og = OpenGraph(html=document)
         assert "title" in og
@@ -20,7 +37,7 @@ class TestOpenGraph:
             # noinspection PyStatementEffect
             og.attribute_does_not_exist
 
-    def test_loading_from_url(self, document):
+    def test__fetch(self, document):
         with requests_mock.Mocker() as m:
             m.get(URL, text=document)
             og = OpenGraph(url=URL)

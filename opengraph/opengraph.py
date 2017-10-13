@@ -18,7 +18,7 @@ class OpenGraph:
         if name in self._data:
             return self._data[name]
         raise AttributeError(
-            'Open Graph object has no attribute "{}"'.format(name))
+            "Open Graph object has no attribute '{}'".format(name))
 
     def __repr__(self):
         return self._data.__str__()
@@ -27,6 +27,8 @@ class OpenGraph:
         return self.__repr__()
 
     def _fetch(self, url):
+        if not re.search(r"^https?://", url):
+            return
         headers = {}
         if self.useragent:
             headers = {
@@ -36,6 +38,8 @@ class OpenGraph:
         return response.text
 
     def _parse(self, html, parser):
+        if not html:
+            return self._data
         doc = BeautifulSoup(html, parser)
         ogs = doc.html.head.findAll(property=re.compile(r"^og"))
 
