@@ -1,11 +1,15 @@
+import logging
 import re
 
 import requests
 from bs4 import BeautifulSoup
+from requests import RequestException
 
 from opengraph import __version__
 
 USER_AGENT = "python-opengraph-jaywink/%s (+https://github.com/jaywink/python-opengraph)" % __version__
+
+logger = logging.getLogger(__name__)
 
 
 class OpenGraph:
@@ -37,8 +41,13 @@ class OpenGraph:
         headers = {
             "user-agent": self.useragent,
         }
-        response = requests.get(url, headers=headers, timeout=self.timeout)
-        return response.text
+        try:
+            response = requests.get(url, headers=headers, timeout=self.timeout)
+        except RequestException as ex:
+            logger.warning("_fetch - %s when fetching url %s", ex, url)
+            return
+        else:
+            return response.text
 
     def _parse(self, html, parser):
         if not html:

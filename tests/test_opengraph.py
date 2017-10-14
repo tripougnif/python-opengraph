@@ -2,9 +2,10 @@ from unittest.mock import patch, Mock
 
 import pytest
 import requests_mock
+from requests import Timeout
 
 from opengraph import OpenGraph
-from opengraph.opengraph import USER_AGENT
+from opengraph.opengraph import USER_AGENT, logger
 
 DEFAULT_HEADERS = {"user-agent": USER_AGENT}
 URL = "https://example.org"
@@ -20,13 +21,13 @@ class TestOpenGraph:
     def test__fetch__only_http_protocols(self, document):
         with requests_mock.Mocker() as m:
             m.get("http://foo.bar", text=document)
-            assert OpenGraph(url="http://foo.bar") != {}
+            assert OpenGraph(url="http://foo.bar")._data != {}
             m.get("https://foo.bar", text=document)
-            assert OpenGraph(url="https://foo.bar") != {}
+            assert OpenGraph(url="https://foo.bar")._data != {}
             m.get("mailto:jay@foo.bar", text=document)
-            assert not OpenGraph(url="mailto:jay@foo.bar") == {}
+            assert OpenGraph(url="mailto:jay@foo.bar")._data == {}
             m.get("ftp://foo.bar", text=document)
-            assert not OpenGraph(url="ftp://foo.bar") == {}
+            assert OpenGraph(url="ftp://foo.bar")._data == {}
 
     def test_contains(self, document):
         og = OpenGraph(html=document)
@@ -38,6 +39,12 @@ class TestOpenGraph:
         with pytest.raises(AttributeError):
             # noinspection PyStatementEffect
             og.attribute_does_not_exist
+
+    @patch("opengraph.opengraph.requests.get", side_effect=Timeout)
+    @patch.object(logger, "warning", autospec=True)
+    def test_returns_none_on_get_exception(self, mock_logger, mock_get):
+        assert OpenGraph(url=URL)._data == {}
+        assert mock_logger.called
 
     def test_str_repr(self, document):
         og = OpenGraph(html=document)

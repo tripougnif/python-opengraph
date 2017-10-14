@@ -12,6 +12,9 @@
 ### Changed
 
 * No longer fetch other URL's than "http" and "https" protocols.
+* Catch exceptions raised by `requests.get`.
+
+  On an exception, return an empty result and log with warning level to the logger `opengraph`.
 
 ## 0.0.3 (2017-10-12)
 
