@@ -3,11 +3,15 @@ import re
 import requests
 from bs4 import BeautifulSoup
 
+from opengraph import __version__
+
+USER_AGENT = "python-opengraph-jaywink/%s (+https://github.com/jaywink/python-opengraph)" % __version__
+
 
 class OpenGraph:
     def __init__(self, url=None, html=None, useragent=None, parser="html.parser"):
         self._data = {}
-        self.useragent = useragent
+        self.useragent = useragent or USER_AGENT
         content = html or self._fetch(url)
         self._parse(content, parser=parser)
 
@@ -29,11 +33,9 @@ class OpenGraph:
     def _fetch(self, url):
         if not re.search(r"^https?://", url):
             return
-        headers = {}
-        if self.useragent:
-            headers = {
-                "user-agent": self.useragent
-            }
+        headers = {
+            "user-agent": self.useragent,
+        }
         response = requests.get(url, headers=headers)
         return response.text
 

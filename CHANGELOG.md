@@ -2,6 +2,10 @@
 
 ## 0.1.0.dev0 (unreleased)
 
+### Added
+
+* Use a default user agent if none given.
+
 ### Changed
 
 * No longer fetch other URL's than "http" and "https" protocols.
