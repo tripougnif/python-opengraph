@@ -9,9 +9,10 @@ USER_AGENT = "python-opengraph-jaywink/%s (+https://github.com/jaywink/python-op
 
 
 class OpenGraph:
-    def __init__(self, url=None, html=None, useragent=None, parser="html.parser"):
+    def __init__(self, url=None, html=None, useragent=None, parser="html.parser", timeout=10):
         self._data = {}
         self.useragent = useragent or USER_AGENT
+        self.timeout = timeout
         content = html or self._fetch(url)
         self._parse(content, parser=parser)
 
@@ -36,7 +37,7 @@ class OpenGraph:
         headers = {
             "user-agent": self.useragent,
         }
-        response = requests.get(url, headers=headers)
+        response = requests.get(url, headers=headers, timeout=self.timeout)
         return response.text
 
     def _parse(self, html, parser):

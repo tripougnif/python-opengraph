@@ -5,6 +5,9 @@
 ### Added
 
 * Use a default user agent if none given.
+* Allow passing a `timeout` that will be used with `requests.get`.
+
+  A default timeout of 10 seconds will be used if a timeout is not passed in.
 
 ### Changed
 

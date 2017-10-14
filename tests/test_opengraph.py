@@ -1,10 +1,12 @@
-from unittest.mock import patch
+from unittest.mock import patch, Mock
 
 import pytest
 import requests_mock
 
 from opengraph import OpenGraph
+from opengraph.opengraph import USER_AGENT
 
+DEFAULT_HEADERS = {"user-agent": USER_AGENT}
 URL = "https://example.org"
 
 
@@ -37,12 +39,6 @@ class TestOpenGraph:
             # noinspection PyStatementEffect
             og.attribute_does_not_exist
 
-    def test__fetch(self, document):
-        with requests_mock.Mocker() as m:
-            m.get(URL, text=document)
-            og = OpenGraph(url=URL)
-        assert og.title == "Test title"
-
     def test_str_repr(self, document):
         og = OpenGraph(html=document)
         text_of_data = og._data.__str__()
@@ -61,3 +57,11 @@ class TestOpenGraph:
         except AttributeError:
             pass
         mock_bs.assert_called_once_with(document, "spam")
+
+    @patch("opengraph.opengraph.requests.get", return_value=Mock(text=""))
+    def test_uses_timeout(self, mock_get):
+        OpenGraph(url=URL)
+        mock_get.assert_called_once_with(URL, headers=DEFAULT_HEADERS, timeout=10)
+        mock_get.reset_mock()
+        OpenGraph(url=URL, timeout=123)
+        mock_get.assert_called_once_with(URL, headers=DEFAULT_HEADERS, timeout=123)
