@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+* A failed fetch due to network errors (for example timeout) now do a `debug` level logger instead of `warning` like before.
+
 ## 0.1.0 (2017-10-14)
 
 ### Added

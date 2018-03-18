@@ -44,7 +44,7 @@ class OpenGraph:
         try:
             response = requests.get(url, headers=headers, timeout=self.timeout)
         except RequestException as ex:
-            logger.warning("_fetch - %s when fetching url %s", ex, url)
+            logger.debug("_fetch - %s when fetching url %s", ex, url)
             return
         else:
             return response.text

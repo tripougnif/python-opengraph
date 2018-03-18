@@ -41,7 +41,7 @@ class TestOpenGraph:
             og.attribute_does_not_exist
 
     @patch("opengraph.opengraph.requests.get", side_effect=Timeout)
-    @patch.object(logger, "warning", autospec=True)
+    @patch.object(logger, "debug", autospec=True)
     def test_returns_none_on_get_exception(self, mock_logger, mock_get):
         assert OpenGraph(url=URL)._data == {}
         assert mock_logger.called
