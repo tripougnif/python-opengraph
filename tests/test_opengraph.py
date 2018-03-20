@@ -14,20 +14,37 @@ URL = "https://example.org"
 class TestOpenGraph:
     def test__fetch(self, document):
         with requests_mock.Mocker() as m:
+            m.head(URL, headers={'Content-Type': 'text/html; charset=utf-8'})
             m.get(URL, text=document)
             og = OpenGraph(url=URL)
         assert og.title == "Test title"
 
     def test__fetch__only_http_protocols(self, document):
         with requests_mock.Mocker() as m:
+            m.head("http://foo.bar", headers={'Content-Type': 'text/html; charset=utf-8'})
             m.get("http://foo.bar", text=document)
             assert OpenGraph(url="http://foo.bar")._data != {}
+            m.head("https://foo.bar", headers={'Content-Type': 'text/html; charset=utf-8'})
             m.get("https://foo.bar", text=document)
             assert OpenGraph(url="https://foo.bar")._data != {}
             m.get("mailto:jay@foo.bar", text=document)
             assert OpenGraph(url="mailto:jay@foo.bar")._data == {}
             m.get("ftp://foo.bar", text=document)
             assert OpenGraph(url="ftp://foo.bar")._data == {}
+
+    def test__fetch__content_type__html_fetched(self, document):
+        with requests_mock.Mocker() as m:
+            m.head(URL, headers={'Content-Type': 'text/html; charset=utf-8'})
+            m.get(URL, text=document)
+            og = OpenGraph(url=URL)
+        assert og.title == "Test title"
+
+    def test__fetch__content_type__non_html_skipped(self, document):
+        with requests_mock.Mocker() as m:
+            m.head(URL, headers={'Content-Type': 'video/mp4'})
+            m.get(URL, text=document)
+            og = OpenGraph(url=URL)
+        assert og._data == {}
 
     def test_contains(self, document):
         og = OpenGraph(html=document)

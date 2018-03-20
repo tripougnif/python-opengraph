@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+* Before fetching remote document for extracting tags, a HEAD request is now made to check the content type of the document. Anything that is not `text/html` is then skipped.
+
 ## 0.1.1 (2018-03-18)
 
 ### Changed

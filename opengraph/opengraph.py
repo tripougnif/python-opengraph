@@ -15,8 +15,10 @@ logger = logging.getLogger(__name__)
 class OpenGraph:
     def __init__(self, url=None, html=None, useragent=None, parser="html.parser", timeout=10):
         self._data = {}
-        self.useragent = useragent or USER_AGENT
         self.timeout = timeout
+        self.headers = {
+            "user-agent": useragent or USER_AGENT,
+        }
         content = html or self._fetch(url)
         self._parse(content, parser=parser)
 
@@ -35,14 +37,23 @@ class OpenGraph:
     def __str__(self):
         return self.__repr__()
 
+    def _fetch_content_type(self, url):
+        try:
+            response = requests.head(url, headers=self.headers, timeout=self.timeout)
+        except RequestException as ex:
+            logger.debug("_fetch_content_type - %s when fetching url %s", ex, url)
+            return ""
+        else:
+            return response.headers.get('Content-Type', "")
+
     def _fetch(self, url):
         if not re.search(r"^https?://", url):
             return
-        headers = {
-            "user-agent": self.useragent,
-        }
+        content_type = self._fetch_content_type(url)
+        if not content_type.startswith('text/html'):
+            return
         try:
-            response = requests.get(url, headers=headers, timeout=self.timeout)
+            response = requests.get(url, headers=self.headers, timeout=self.timeout)
         except RequestException as ex:
             logger.debug("_fetch - %s when fetching url %s", ex, url)
             return
