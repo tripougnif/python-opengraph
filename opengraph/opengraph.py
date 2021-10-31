@@ -58,7 +58,7 @@ class OpenGraph:
             logger.debug("_fetch - %s when fetching url %s", ex, url)
             return
         else:
-            return response.text
+            return response.content
 
     def _parse(self, html, parser):
         if not html:
